@@ -1,13 +1,30 @@
 # --conf spark.scheduler.pool=high_priority
-local:
+clean:
+	kubectl delete pods $(kubectl get pods | grep -v RESTARTS | awk '{print $1}')
+
+submit-local:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
 		--conf spark.scheduler.pool=production \
-		--master spark://192.168.80.241:7077 \
+		--master local \
 		--class org.example.SparkApp --deploy-mode client \
 		/Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
 
-clean:
-	kubectl delete pods $(kubectl get pods | grep -v RESTARTS | awk '{print $1}')
+submit-standalone:
+	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
+	--conf spark.standalone.submit.waitAppCompletion=false  \
+	--deploy-mode cluster \
+	--master spark://192.168.80.241:7077 \
+	--class org.example.HiveApp \
+	/Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
+
+
+submit-standalone-wait:
+	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
+	--conf spark.standalone.submit.waitAppCompletion=true  \
+	--deploy-mode client \
+	--master spark://192.168.80.241:7077 \
+	--class org.example.HiveApp /Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
+
 
 submit-k8s:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
@@ -27,19 +44,3 @@ submit-k8s:
 		--conf spark.kubernetes.executor.volumes.hostPath.libs.options.path=/Users/simon/workspaces/deom-spark-lineage/target \
 		--conf spark.kubernetes.file.upload.path=/Users/simon/workspaces/deom-spark-lineage/target \
 		local:///Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
-
-submit-standalone:
-	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
-	--conf spark.standalone.submit.waitAppCompletion=false  \
-	--deploy-mode cluster \
-	--master spark://192.168.80.241:7077 \
-	--class org.example.HiveApp \
-	/Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
-
-submit-standalone-wait:
-	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
-	--conf spark.standalone.submit.waitAppCompletion=true  \
-	--deploy-mode client \
-	--master spark://192.168.80.241:7077 \
-	--class org.example.HiveApp /Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
-
