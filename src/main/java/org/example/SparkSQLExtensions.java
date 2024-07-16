@@ -41,7 +41,7 @@ public class SparkSQLExtensions implements Function1<SparkSessionExtensions, Box
         return BoxedUnit.UNIT;
     }
 
-    // trace the sql
+    // trace sql
     private static class SQLParserTracer implements ParserInterface {
 
         private static final Logger logger = LoggerFactory.getLogger(SQLParserTracer.class);
@@ -57,7 +57,7 @@ public class SparkSQLExtensions implements Function1<SparkSessionExtensions, Box
 
             // Log the SQL text, send to remote service for further processing
             if (sqlText.toLowerCase().contains("merge") || sqlText.toLowerCase().contains("insert")) {
-                logger.info("SQL Text >>>>>>>  {}", sqlText);
+                logger.info("SQL Text >>>>>>>     {}", sqlText);
                 logger.info("LogicalPlan >>>>>>>  {}", logicalPlan.prettyJson());
             }
 

@@ -13,7 +13,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spark.version>3.5.1</spark.version>
-        <hadoop.version>3.3.6</hadoop.version>
+        <hadoop.version>3.3.4</hadoop.version>
         <openLineageVersion>1.17.1</openLineageVersion>
         <jackson.version>2.15.2</jackson.version>
     </properties>
@@ -70,11 +70,17 @@
             <version>${spark.version}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.slf4j</groupId>-->
-        <!--            <artifactId>slf4j-api</artifactId>-->
-        <!--            <version>2.0.13</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>com.github.jsqlparser</groupId>-->
@@ -96,6 +102,14 @@
         <!--            <artifactId>trino-parser</artifactId>-->
         <!--            <version>450</version>-->
         <!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+
+
 
     </dependencies>
     <build>

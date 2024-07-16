@@ -1,5 +1,6 @@
 package org.example;
 
+import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -8,22 +9,27 @@ public class HiveApp {
     public static void main(String[] args) {
 
         System.out.println(org.apache.hadoop.fs.s3a.S3AFileSystem.class);
+
+        SparkConf conf = new SparkConf();
+        if(System.getenv("SPARK_AUTH_SECRET") != null) {
+            System.out.println("----SPARK_AUTH_SECRET-----" + System.getenv("SPARK_AUTH_SECRET"));
+            conf.set("spark.authenticate.secret", System.getenv("SPARK_AUTH_SECRET"));
+        }
+
         SparkSession spark = SparkSession
                 .builder()
                 .appName("HiveApp")
+
+                .master("local")
 
                 //.config("spark.master", "spark://192.168.80.241:7077")
                 //.config("spark.executor.instances", "2")
                 //.config("spark.executor.cores", "2")
                 //.config("spark.dynamicAllocation.maxExecutors", "2")
                 //.config("spark.dynamicAllocation.enabled", "true")
-
                 // spark.submit.waitForCompletion
 
-
-                //.config("spark.authenticate.secret", "w2Xaege1JZSCpop1Dqd9")
-
-
+                .config(conf)
                 .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
                 .config("spark.hadoop.fs.s3a.endpoint", "http://192.168.80.241:9000")
                 .config("spark.hadoop.fs.s3a.access.key", "w2Xaege1JZSCpop1Dqd9")
@@ -35,10 +41,10 @@ public class HiveApp {
                 .config("spark.sql.catalog.spark_catalog.type", "hive")
                 .config("spark.sql.catalog.spark_catalog.uri", "thrift://192.168.80.241:9083")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "s3a://hive/warehouse")
-                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
+                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.SparkSQLExtensions")
                 .getOrCreate();
 
-        spark.sparkContext().setLogLevel("DEBUG");
+        //spark.sparkContext().setLogLevel("DEBUG");
 
         spark.sql("show catalogs").show();
 

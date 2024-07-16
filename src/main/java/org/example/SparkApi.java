@@ -30,7 +30,6 @@ public class SparkApi {
                 RowFactory.create(3, "Data 3")
         };
 
-
         Dataset<Row> anotherTableData = spark.createDataFrame(Arrays.asList(sampleData), anotherTableSchema);
         anotherTableData.write().mode(SaveMode.Overwrite).format("iceberg").saveAsTable("ods.another_table");
 
