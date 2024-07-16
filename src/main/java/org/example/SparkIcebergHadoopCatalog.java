@@ -52,7 +52,7 @@ public class SparkIcebergHadoopCatalog {
         spark.sql("insert into ods.my_iceberg_table2 values (1,'simon')");
 
         log.info("-----count-----> " + spark.sql("select * from ods.my_iceberg_table2").count());
-        spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(100000)" +
+        spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(5000)" +
                 " when not matched then insert (id, data) values (s.id, s.data)");
 
         spark.sql("insert into ods.my_iceberg_table2 select * from ods.my_iceberg_table");
