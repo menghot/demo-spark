@@ -6,8 +6,10 @@ local:
 		--class org.example.SparkApp --deploy-mode client \
 		/Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
 
-#
-k8s:
+clean:
+	kubectl delete pods $(kubectl get pods | grep -v RESTARTS | awk '{print $1}')
+
+submit-k8s:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
 		--conf spark.scheduler.pool=production \
 		--master k8s://https://127.0.0.1:6443 \
@@ -26,20 +28,18 @@ k8s:
 		--conf spark.kubernetes.file.upload.path=/Users/simon/workspaces/deom-spark-lineage/target \
 		local:///Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
 
-clean:
-	kubectl delete pods $(kubectl get pods | grep -v RESTARTS | awk '{print $1}')
-
-submit:
+submit-standalone:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
-	--conf spark.standalone.submit.waitAppCompletion=true  \
+	--conf spark.standalone.submit.waitAppCompletion=false  \
 	--deploy-mode cluster \
 	--master spark://192.168.80.241:7077 \
 	--class org.example.HiveApp \
 	/Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
 
-spark:
+submit-standalone-wait:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
 	--conf spark.standalone.submit.waitAppCompletion=true  \
 	--deploy-mode client \
 	--master spark://192.168.80.241:7077 \
 	--class org.example.HiveApp /Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
+
