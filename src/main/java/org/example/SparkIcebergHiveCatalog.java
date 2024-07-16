@@ -5,13 +5,13 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-public class HiveApp {
+public class SparkIcebergHiveCatalog {
     public static void main(String[] args) {
 
         System.out.println(org.apache.hadoop.fs.s3a.S3AFileSystem.class);
 
         SparkConf conf = new SparkConf();
-        if(System.getenv("SPARK_AUTH_SECRET") != null) {
+        if (System.getenv("SPARK_AUTH_SECRET") != null) {
             System.out.println("----SPARK_AUTH_SECRET-----" + System.getenv("SPARK_AUTH_SECRET"));
             conf.set("spark.authenticate.secret", System.getenv("SPARK_AUTH_SECRET"));
         }
@@ -23,7 +23,7 @@ public class HiveApp {
                 .master("local")
 
                 //.config("spark.master", "spark://192.168.80.241:7077")
-                //.config("spark.executor.instances", "2")
+                //.config("spark.max.cores", "2")
                 //.config("spark.executor.cores", "2")
                 //.config("spark.dynamicAllocation.maxExecutors", "2")
                 //.config("spark.dynamicAllocation.enabled", "true")

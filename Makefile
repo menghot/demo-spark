@@ -1,5 +1,4 @@
 # --conf spark.scheduler.pool=high_priority
-
 local:
 	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit \
 		--conf spark.scheduler.pool=production \
@@ -40,4 +39,4 @@ submit:
 
 
 spark:
-	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit --conf spark.authenticate.secret=w2Xaege1JZSCpop1Dqd9 --conf spark.standalone.submit.waitAppCompletion=true  --deploy-mode client --master spark://192.168.80.241:7077 --class org.example.HiveApp /Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar
+	/Users/simon/tools/spark-3.5.1-bin-hadoop3/bin/spark-submit --conf spark.standalone.submit.waitAppCompletion=true  --deploy-mode client --master spark://192.168.80.241:7077 --class org.example.HiveApp /Users/simon/workspaces/deom-spark-lineage/target/deom-spark-lineage-1.0-SNAPSHOT.jar

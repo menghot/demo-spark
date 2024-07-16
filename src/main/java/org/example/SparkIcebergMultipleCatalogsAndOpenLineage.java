@@ -2,7 +2,7 @@ package org.example;
 
 import org.apache.spark.sql.SparkSession;
 
-public class SimpleApp {
+public class SparkIcebergMultipleCatalogsAndOpenLineage {
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -25,7 +25,6 @@ public class SimpleApp {
                 .config("spark.sql.catalog.local2.type", "hadoop")
                 .config("spark.sql.catalog.local2.warehouse", "warehouse_local2")
                 .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
-
                 .config("spark.extraListeners", "io.openlineage.spark.agent.OpenLineageSparkListener")
 
                 .getOrCreate();
@@ -39,7 +38,6 @@ public class SimpleApp {
 
         // spark.sparkContext().setLogLevel("DEBUG");
 
-
         spark.sql("use spark_catalog");
         spark.sql("show catalogs").show();
         spark.sql("show schemas").show();
@@ -49,7 +47,6 @@ public class SimpleApp {
         spark.sql("drop table if exists ods.my_iceberg_table2 purge ");
         spark.sql("create table IF NOT EXISTS ods.my_iceberg_table  (id int, data string) using iceberg");
         spark.sql("create table IF NOT EXISTS ods.my_iceberg_table2 (id int, data string) using iceberg");
-
 
         spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = s.data");
 

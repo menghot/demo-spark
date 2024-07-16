@@ -54,7 +54,6 @@ public class SparkSQLExtensions implements Function1<SparkSessionExtensions, Box
         public LogicalPlan parsePlan(String sqlText) throws ParseException {
 
             LogicalPlan logicalPlan = delegate.parsePlan(sqlText);
-
             // Log the SQL text, send to remote service for further processing
             if (sqlText.toLowerCase().contains("merge") || sqlText.toLowerCase().contains("insert")) {
                 logger.info("SQL Text >>>>>>>     {}", sqlText);

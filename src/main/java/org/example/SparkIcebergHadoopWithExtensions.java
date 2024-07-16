@@ -6,17 +6,18 @@ import org.apache.spark.sql.types.StructType;
 
 import java.util.Arrays;
 
-public class SparkApi {
+public class SparkIcebergHadoopWithExtensions {
 
     public static void main(String[] args) {
+
         SparkSession spark = SparkSession
                 .builder()
-                .appName("SparkApi")
+                .appName(SparkIcebergHadoopWithExtensions.class.getName())
                 .master("local")
                 .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
                 .config("spark.sql.catalog.spark_catalog.type", "hadoop")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "warehouse")
-                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SqlTracerExtensions")
+                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SparkSQLExtensions")
                 .getOrCreate();
 
         // Create ods.another_table using DataFrame API (if not already created)

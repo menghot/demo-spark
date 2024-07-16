@@ -8,32 +8,28 @@ import org.slf4j.LoggerFactory;
 
 import static org.apache.spark.sql.functions.udf;
 
-public class SparkApp {
+public class SparkIcebergHadoopCatalog {
 
+    private static final Logger log = LoggerFactory.getLogger(SparkIcebergHadoopCatalog.class);
 
-    private static final Logger log = LoggerFactory.getLogger(SparkApp.class);
-
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         // Create a Spark session
 
         SparkSession spark = SparkSession
                 .builder()
-                .appName("IcebergWriteExample")
+                .appName(SparkIcebergHadoopCatalog.class.getName())
                 //.master("local")
                 .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
                 .config("spark.sql.catalog.spark_catalog.type", "hadoop")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "warehouse0000")
 
                 // config
-                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SqlTracerExtensions")
-
+                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SparkSQLExtensions")
                 //.config("spark.extraListeners", "io.openlineage.spark.agent.OpenLineageSparkListener")
 
                 .getOrCreate();
 
         //spark.sparkContext().setLogLevel("DEBUG");
-
-
         UserDefinedFunction sleepUDF = udf((Integer duration) -> {
             try {
                 log.info("---------------> sleep now");
@@ -56,13 +52,10 @@ public class SparkApp {
         spark.sql("insert into ods.my_iceberg_table2 values (1,'simon')");
 
         log.info("-----count-----> " + spark.sql("select * from ods.my_iceberg_table2").count());
-
-
         spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(100000)" +
                 " when not matched then insert (id, data) values (s.id, s.data)");
 
         //spark.sql("select sleepUDF(100000)").show();
-
         spark.stop();
     }
 }

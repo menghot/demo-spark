@@ -12,14 +12,14 @@ public class MyEventFilterBuilder extends BasicEventFilterBuilder {
 
     @Override
     public void onApplicationEnd(SparkListenerApplicationEnd applicationEnd) {
-        System.out.println(">>>>>>>>>>>>>>>>>>MyEventFilterBuilder>>>>>>>>>>>>>>>>>>> applicationEnd" );
+        System.out.println(">>>>>>>>>>>>>>>>>>MyEventFilterBuilder>>>>>>>>>>>>>>>>>>> applicationEnd");
 
         super.onApplicationEnd(applicationEnd);
     }
 
     @Override
     public void onApplicationStart(SparkListenerApplicationStart applicationStart) {
-        System.out.println(">>>>>>>>>>>>>>>>>>MyEventFilterBuilder>>>>>>>>>>>>>>>>>>> applicationStart" );
+        System.out.println(">>>>>>>>>>>>>>>>>>MyEventFilterBuilder>>>>>>>>>>>>>>>>>>> applicationStart");
         super.onApplicationStart(applicationStart);
     }
 }
