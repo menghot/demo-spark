@@ -4,3 +4,10 @@ http-server.process-forwarded=true
 http-server.https.enabled=true
 http-server.https.port=443
 http-server.https.keystore.path=etc/trino.pem
+
+
+password-authenticator.properties
+
+
+password-authenticator.name=file
+file.password-file=etc/password.db
