@@ -11,3 +11,6 @@ password-authenticator.properties
 
 password-authenticator.name=file
 file.password-file=etc/password.db
+
+$2y$10$zI0dX96z9kiAOyfTeT0GFuso.ZjYdk4DPX3.ldkga14j.bt6Ur34a
+$2y$10$WUB4Rt3Mne5/1O.hTu.Jhe35ZdJYQKHmJLlnaiCpCuWuKjh0WKyB6  
