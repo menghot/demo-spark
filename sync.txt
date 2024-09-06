@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Variables
+SOURCE_DIR="/path/to/source/directory/"
+DESTINATION_USER="remote_user"
+DESTINATION_DIR="/path/to/destination/directory/"
+SSH_PORT=22  # Change this if you're using a different SSH port
+
+# List of remote hosts
+NODES=("node1" "node2" "node3")  # Add your node hostnames or IPs here
+
+# Loop through each node and sync files
+for NODE in "${NODES[@]}"; do
+    echo "Syncing files to $NODE..."
+    rsync -avz -e "ssh -p $SSH_PORT" $SOURCE_DIR $DESTINATION_USER@$NODE:$DESTINATION_DIR
+
+    # Check if the rsync command was successful
+    if [ $? -eq 0 ]; then
+        echo "Files synchronized successfully to $NODE."
+    else
+        echo "Error during file synchronization to $NODE."
+    fi
+done
