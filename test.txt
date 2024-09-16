@@ -17,3 +17,21 @@ $2y$10$zI0dX96z9kiAOyfTeT0GFuso.ZjYdk4DPX3.ldkga14j.bt6Ur34a
 $2y$10$WUB4Rt3Mne5/1O.hTu.Jhe35ZdJYQKHmJLlnaiCpCuWuKjh0WKyB6  
 
 $2y$10$dAFC/K.hODVIJppRGSXX7Oqke4q3nIFR2DIgqk4xotEKsUghvVmOm
+
+
+
+select l.id,
+l.action,
+cast(l.dttm as date) dt,
+u.first_name,
+u.last_name,
+l.dttm,
+d.dashboard_title dashboard_name,
+s.slice_name slice_name,
+l.duration_ms,
+l.referrer
+from logs l
+inner join ab_user u on u.id=l.user_id
+left join dashboards d on l.dashboard_id=d.id
+left join slices s on l.slice_id=s.id where slice_name is not null 
+order by id desc
