@@ -1,0 +1,203 @@
+import xml.etree.ElementTree as ET
+
+def create_single_test_plan(domain, port, path, params):
+    # Create the root element for the test plan
+    test_plan = ET.Element("jmeterTestPlan", {
+        "version": "1.2",
+        "properties": "5.0",
+        "jmeter": "5.4.1"
+    })
+
+    hash_tree = ET.SubElement(test_plan, "hashTree")
+
+    # Create the Test Plan element
+    test_plan_element = ET.SubElement(hash_tree, "TestPlan", {
+        "guiclass": "TestPlanGui",
+        "testclass": "TestPlan",
+        "testname": "Test Plan",
+        "enabled": "true"
+    })
+    ET.SubElement(test_plan_element, "stringProp", {
+        "name": "TestPlan.comments"
+    }).text = ""
+    ET.SubElement(test_plan_element, "boolProp", {
+        "name": "TestPlan.functional_mode"
+    }).text = "false"
+    ET.SubElement(test_plan_element, "boolProp", {
+        "name": "TestPlan.tearDown_on_shutdown"
+    }).text = "true"
+    ET.SubElement(test_plan_element, "boolProp", {
+        "name": "TestPlan.serialize_threadgroups"
+    }).text = "false"
+    
+    user_defined_vars = ET.SubElement(test_plan_element, "elementProp", {
+        "name": "TestPlan.user_defined_variables",
+        "elementType": "Arguments",
+        "guiclass": "ArgumentsPanel",
+        "testclass": "Arguments",
+        "testname": "User Defined Variables",
+        "enabled": "true"
+    })
+    ET.SubElement(user_defined_vars, "collectionProp", {
+        "name": "Arguments.arguments"
+    })
+    ET.SubElement(test_plan_element, "stringProp", {
+        "name": "TestPlan.user_define_classpath"
+    }).text = ""
+
+    # Create the Thread Group wrapped in a hashTree
+    thread_group_hash_tree = ET.SubElement(hash_tree, "hashTree")
+    thread_group = ET.SubElement(thread_group_hash_tree, "ThreadGroup", {
+        "guiclass": "ThreadGroupGui",
+        "testclass": "ThreadGroup",
+        "testname": "Thread Group",
+        "enabled": "true"
+    })
+    ET.SubElement(thread_group, "stringProp", {
+        "name": "ThreadGroup.on_sample_error"
+    }).text = "continue"
+    
+    main_controller = ET.SubElement(thread_group, "elementProp", {
+        "name": "ThreadGroup.main_controller",
+        "elementType": "LoopController",
+        "guiclass": "LoopControlPanel",
+        "testclass": "LoopController",
+        "testname": "Loop Controller",
+        "enabled": "true"
+    })
+    ET.SubElement(main_controller, "boolProp", {
+        "name": "LoopController.continue_forever"
+    }).text = "false"
+    ET.SubElement(main_controller, "stringProp", {
+        "name": "LoopController.loops"
+    }).text = "1"
+    
+    ET.SubElement(thread_group, "stringProp", {
+        "name": "ThreadGroup.num_threads"
+    }).text = "1"
+    ET.SubElement(thread_group, "stringProp", {
+        "name": "ThreadGroup.ramp_time"
+    }).text = "1"
+    ET.SubElement(thread_group, "boolProp", {
+        "name": "ThreadGroup.scheduler"
+    }).text = "false"
+    ET.SubElement(thread_group, "stringProp", {
+        "name": "ThreadGroup.duration"
+    }).text = ""
+    ET.SubElement(thread_group, "stringProp", {
+        "name": "ThreadGroup.delay"
+    }).text = ""
+    ET.SubElement(thread_group, "boolProp", {
+        "name": "ThreadGroup.same_user_on_next_iteration"
+    }).text = "true"
+
+    # Create the HTTP Request Sampler wrapped in another hashTree
+    sampler_hash_tree = ET.SubElement(thread_group_hash_tree, "hashTree")
+
+    create_http_sample(domain, params, path, port, sampler_hash_tree,"Test 1")
+    create_http_sample(domain, params, path, port, sampler_hash_tree, "Test 2")
+
+    # Create a Listener for viewing results wrapped in another hashTree
+    result_collector = ET.SubElement(thread_group_hash_tree, "ResultCollector", {
+        "guiclass": "ViewResultsFullVisualizer",
+        "testclass": "ResultCollector",
+        "testname": "View Results Tree",
+        "enabled": "true"
+    })
+    ET.SubElement(result_collector, "boolProp", {
+        "name": "ResultCollector.error_logging"
+    }).text = "false"
+
+    return test_plan
+
+
+def create_http_sample(domain, params, path, port, sampler_hash_tree, test_name):
+    http_sampler = ET.SubElement(sampler_hash_tree, "HTTPSamplerProxy", {
+        "guiclass": "HttpTestSampleGui",
+        "testclass": "HTTPSamplerProxy",
+        "testname": test_name,
+        "enabled": "true"
+    })
+
+    # add split
+    ET.SubElement(sampler_hash_tree, "hashTree")
+
+    # attributes
+    arguments = ET.SubElement(http_sampler, "elementProp", {
+        "name": "HTTPsampler.Arguments",
+        "elementType": "Arguments",
+        "guiclass": "HTTPArgumentsPanel",
+        "testclass": "Arguments",
+        "testname": "User Defined Variables",
+        "enabled": "true"
+    })
+    args_collection = ET.SubElement(arguments, "collectionProp", {
+        "name": "Arguments.arguments"
+    })
+    # Add parameters to the POST request
+    for key, value in params.items():
+        param_element = ET.SubElement(args_collection, "elementProp", {
+            "name": key,
+            "elementType": "HTTPArgument"
+        })
+        ET.SubElement(param_element, "boolProp", {
+            "name": "HTTPArgument.always_encode"
+        }).text = "false"
+        ET.SubElement(param_element, "stringProp", {
+            "name": "Argument.name"
+        }).text = key
+        ET.SubElement(param_element, "stringProp", {
+            "name": "Argument.value"
+        }).text = value
+        ET.SubElement(param_element, "stringProp", {
+            "name": "Argument.metadata"
+        }).text = "="
+    ET.SubElement(http_sampler, "stringProp", {
+        "name": "HTTPSampler.domain"
+    }).text = domain
+    ET.SubElement(http_sampler, "stringProp", {
+        "name": "HTTPSampler.port"
+    }).text = str(port)
+    ET.SubElement(http_sampler, "stringProp", {
+        "name": "HTTPSampler.protocol"
+    }).text = "https"
+    ET.SubElement(http_sampler, "stringProp", {
+        "name": "HTTPSampler.path"
+    }).text = path
+    ET.SubElement(http_sampler, "stringProp", {
+        "name": "HTTPSampler.method"
+    }).text = "POST"
+    ET.SubElement(http_sampler, "boolProp", {
+        "name": "HTTPSampler.follow_redirects"
+    }).text = "true"
+    ET.SubElement(http_sampler, "boolProp", {
+        "name": "HTTPSampler.auto_redirects"
+    }).text = "false"
+    ET.SubElement(http_sampler, "boolProp", {
+        "name": "HTTPSampler.use_keepalive"
+    }).text = "true"
+    ET.SubElement(http_sampler, "boolProp", {
+        "name": "HTTPSampler.DO_MULTIPART_POST"
+    }).text = "false"
+
+
+# Define parameters for the test plan
+domain = "baidu.com"
+port = 443
+path = "/"
+params = {
+    "param1": "value1",
+    "param2": "value2"
+}
+
+# Generate the single test plan
+single_test_plan_tree = create_single_test_plan(domain, port, path, params)
+
+# Create an ElementTree object
+tree = ET.ElementTree(single_test_plan_tree)
+
+# Save the test plan to a .jmx file
+tree.write("single-test-plan.jmx", xml_declaration=True, encoding='UTF-8')
+
+print("Single test plan generated successfully as 'single-test-plan.jmx'.")
+
