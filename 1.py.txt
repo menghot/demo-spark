@@ -94,6 +94,37 @@ def create_single_test_plan(domain, port, path, params):
     # Create the HTTP Request Sampler wrapped in another hashTree
     sampler_hash_tree = ET.SubElement(thread_group_hash_tree, "hashTree")
 
+    # ----------
+        # Add cookie begin
+    cookie_manager = ET.SubElement(sampler_hash_tree, 'CookieManager', attrib={
+        'guiclass': 'CookiePanel',
+        'testclass': 'CookieManager',
+        'testname': 'HTTP Cookie Manager',
+        'enabled': 'true'
+    })
+
+    cookies = ET.SubElement(cookie_manager, 'collectionProp', name='CookieManager.cookies')
+    session_cookie = ET.SubElement(cookies, 'elementProp', attrib={
+        'name': 'session',
+        'elementType': 'Cookie',
+        'testname': 'session'
+    })
+
+    ET.SubElement(session_cookie, 'stringProp', name='Cookie.value').text = 'JWT_VALUE'
+    ET.SubElement(session_cookie, 'stringProp', name='Cookie.domain').text = 'hello.io'
+    ET.SubElement(session_cookie, 'stringProp', name='Cookie.path').text = '/'
+    ET.SubElement(session_cookie, 'boolProp', name='Cookie.secure').text = 'false'
+    ET.SubElement(session_cookie, 'longProp', name='Cookie.expires').text = '0'
+    ET.SubElement(session_cookie, 'boolProp', name='Cookie.path_specified').text = 'true'
+    ET.SubElement(session_cookie, 'boolProp', name='Cookie.domain_specified').text = 'true'
+    ET.SubElement(cookie_manager, 'boolProp', name='CookieManager.clearEachIteration').text = 'false'
+    ET.SubElement(cookie_manager, 'boolProp', name='CookieManager.controlledByThreadGroup').text = 'false'
+    # Add cookie end
+
+    # Hash tree spliter for CookieManager  --------
+    ET.SubElement(sampler_hash_tree, 'hashTree')
+
+
     create_http_sample(domain, params, path, port, sampler_hash_tree,"Test 1")
     create_http_sample(domain, params, path, port, sampler_hash_tree, "Test 2")
 
