@@ -141,6 +141,33 @@ def create_single_test_plan(domain, port, path, params):
 
     return test_plan
 
+def create_http_header_manager():
+    # Create HTTP Header Manager
+    header_manager = ET.Element("HeaderManager", {
+        "guiclass": "HeaderPanel",
+        "testclass": "HeaderManager",
+        "testname": "HTTP Header Manager",
+        "enabled": "true"
+    })
+
+    headers = ET.SubElement(header_manager, "collectionProp", {
+        "name": "HeaderManager.headers"
+    })
+    
+    # Add Content-Type header
+    header_element = ET.SubElement(headers, "elementProp", {
+        "name": "",
+        "elementType": "Header"
+    })
+    ET.SubElement(header_element, "stringProp", {
+        "name": "Header.name"
+    }).text = "Content-Type"
+    ET.SubElement(header_element, "stringProp", {
+        "name": "Header.value"
+    }).text = "application/json"
+
+    return header_manager
+
 
 def create_http_sample(domain, params, path, port, sampler_hash_tree, test_name):
     http_sampler = ET.SubElement(sampler_hash_tree, "HTTPSamplerProxy", {
