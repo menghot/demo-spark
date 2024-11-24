@@ -5,31 +5,39 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>deom-spark-lineage</artifactId>
+    <artifactId>demo-spark</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spark.version>3.5.1</spark.version>
+        <spark.version>3.5.2</spark.version>
         <hadoop.version>3.3.4</hadoop.version>
         <openLineageVersion>1.17.1</openLineageVersion>
         <jackson.version>2.15.2</jackson.version>
+        <iceberg.version>1.5.2</iceberg.version>
     </properties>
 
     <dependencies>
+
+<!--        <dependency>-->
+<!--            <groupId>org.open-metadata</groupId>-->
+<!--            <artifactId>openmetadata-java-client</artifactId>-->
+<!--            <version>1.5.11</version>-->
+<!--        </dependency>-->
+
         <!--iceberg-->
         <dependency>
             <groupId>org.apache.iceberg</groupId>
             <artifactId>iceberg-spark</artifactId>
-            <version>1.5.2</version>
+            <version>${iceberg.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.iceberg</groupId>
             <artifactId>iceberg-spark-runtime-3.5_2.12</artifactId>
-            <version>1.5.2</version>
+            <version>${iceberg.version}</version>
         </dependency>
 
         <!--hadoop-->
@@ -44,6 +52,20 @@
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.amazonaws</groupId>-->
+<!--            <artifactId>aws-java-sdk-bundle</artifactId>-->
+<!--            <version>1.12.765</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.iceberg</groupId>-->
+<!--            <artifactId>iceberg-aws-bundle</artifactId>-->
+<!--            <version>${iceberg.version}</version>-->
+<!--        </dependency>-->
+
+
 
         <!--spark & hive & hive metastore-->
         <dependency>
@@ -109,12 +131,12 @@
             <version>42.7.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>6.2.5</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-core</artifactId>-->
+<!--            <version>6.2.5</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
     </dependencies>
     <build>

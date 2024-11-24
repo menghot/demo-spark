@@ -15,21 +15,24 @@ public class SparkIcebergHadoopCatalog {
     public static void main(String[] args) {
         // Create a Spark session
 
+        log.info("---------------{}", "start on mac");
+
         SparkSession spark = SparkSession
                 .builder()
                 .appName(SparkIcebergHadoopCatalog.class.getName())
                 .master("local")
-                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
+                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkSessionCatalog")
                 .config("spark.sql.catalog.spark_catalog.type", "hadoop")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "warehouse")
 
                 // config
-                .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SparkSQLExtensions")
+                //.config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SparkSQLExtensions")
                 //.config("spark.extraListeners", "io.openlineage.spark.agent.OpenLineageSparkListener")
-
+                .enableHiveSupport()
                 .getOrCreate();
 
-        spark.sparkContext().setLogLevel("DEBUG");
+        //spark.sparkContext().setLogLevel("WARN");
+
         UserDefinedFunction sleepUDF = udf((Integer duration) -> {
             try {
                 log.info("---------------> sleep now");
@@ -47,17 +50,21 @@ public class SparkIcebergHadoopCatalog {
         spark.sql("create schema if not exists ods");
 //        spark.sql("drop table if exists ods.my_iceberg_table purge ");
 //        spark.sql("drop table if exists ods.my_iceberg_table2 purge ");
-//        spark.sql("create table IF NOT EXISTS ods.my_iceberg_table  (id int, data string) using iceberg");
-//        spark.sql("create table IF NOT EXISTS ods.my_iceberg_table2 (id int, data string) using iceberg");
+        spark.sql("create table IF NOT EXISTS ods.my_iceberg_table  (id int, data string) using iceberg");
+        spark.sql("create table IF NOT EXISTS ods.my_iceberg_table2 (id int, data string) using iceberg");
         spark.sql("insert into ods.my_iceberg_table2 values (1,'simon')");
 
-        log.info("-----count-----> " + spark.sql("select * from ods.my_iceberg_table2").count());
-        spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(5000)" +
-                " when not matched then insert (id, data) values (s.id, s.data)");
+        log.info("my_iceberg_table-----count-----> {}", spark.sql("select * from ods.my_iceberg_table").count());
+        log.info("my_iceberg_table2 -----count-----> {}", spark.sql("select * from ods.my_iceberg_table2").count());
+
+//        spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(1000)" +
+//                " when not matched then insert (id, data) values (s.id, s.data)");
 
         spark.sql("insert into ods.my_iceberg_table2 select * from ods.my_iceberg_table");
-
         spark.sql("select * from ods.my_iceberg_table2").show();
+        spark.sql("CREATE or replace VIEW ods.v_my_materialized_view as select * from ods.my_iceberg_table2").show();
+        spark.sql("select * from ods.v_my_materialized_view").show();
+
         spark.stop();
     }
 }
