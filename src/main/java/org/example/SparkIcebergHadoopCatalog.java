@@ -20,7 +20,7 @@ public class SparkIcebergHadoopCatalog {
         SparkSession spark = SparkSession
                 .builder()
                 .appName(SparkIcebergHadoopCatalog.class.getName())
-                .master("local")
+                //.master("local")
                 .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkSessionCatalog")
                 .config("spark.sql.catalog.spark_catalog.type", "hadoop")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "warehouse")
@@ -31,7 +31,7 @@ public class SparkIcebergHadoopCatalog {
                 .enableHiveSupport()
                 .getOrCreate();
 
-        //spark.sparkContext().setLogLevel("WARN");
+        spark.sparkContext().setLogLevel("WARN");
 
         UserDefinedFunction sleepUDF = udf((Integer duration) -> {
             try {

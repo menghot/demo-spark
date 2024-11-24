@@ -56,3 +56,28 @@ submit-k8s:
 		--conf spark.kubernetes.executor.volumes.hostPath.libs.options.path=/Users/simon/workspaces/deom-spark-lineage/target \
 		--conf spark.kubernetes.file.upload.path=/Users/simon/workspaces/deom-spark-lineage/target \
 		local:///Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar
+
+submit-rest:
+	curl -XPOST http://192.168.80.241:6066/v1/submissions/create \
+	--header "Content-Type:application/json;charset=UTF-8" \
+	--data '{
+	"appResource": "",
+	"sparkProperties": {
+	  "spark.master": "spark://192.168.80.241:7077",
+	  "spark.app.name": "Spark Pi",
+	  "spark.driver.memory": "1g",
+	  "spark.driver.cores": "1",
+	  "spark.executor.cores": "2",
+	  "spark.executor.instances": "1",
+	  "spark.executor.memory": "2g",
+	  "spark.dynamicAllocation.enabled":"true",
+	  "spark.dynamicAllocation.minExecutors":"1",
+	  "spark.dynamicAllocation.maxExecutors":"2",
+	  "spark.jars": "/Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar"
+	},
+	"clientSparkVersion": "",
+	"mainClass": "org.example.SparkIcebergHadoopCatalog",
+	"environmentVariables": { },
+	"action": "CreateSubmissionRequest",
+	"appArgs": [ "/opt/spark/examples/src/main/python/pi.py", "10" ]
+	}'
