@@ -1,0 +1,30 @@
+from airflow.operators.python import PythonOperator
+from airflow import DAG
+from datetime import datetime
+from urllib.parse import quote
+
+def generate_encoded_dag_run_href(**kwargs):
+    dag_id = kwargs['dag'].dag_id  # Get the DAG ID
+    dag_run_id = kwargs['run_id']  # Get the DAG Run ID
+    webserver_host = "http://192.168.80.241:32123"  # Replace with your Airflow web server URL and port
+
+    # Encode the DAG Run ID
+    encoded_dag_run_id = quote(dag_run_id)
+
+    # Construct the URL
+    dag_run_href = f"{webserver_host}/dags/{dag_id}/grid?dag_run_id={encoded_dag_run_id}"
+    print(f"Encoded DAG Run HREF: {dag_run_href}")
+    return dag_run_href
+
+with DAG(
+    dag_id='example_dag',
+    start_date=datetime(2023, 1, 1),
+    schedule_interval=None,
+    catchup=False,
+) as dag:
+
+    task = PythonOperator(
+        task_id='generate_encoded_href',
+        python_callable=generate_encoded_dag_run_href,
+        provide_context=True,
+    )
