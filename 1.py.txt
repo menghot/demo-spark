@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 
+^((100(\\.0+)?|[0-9]{1,2}(\\.[0-9]+)?)%$)
+
 def create_single_test_plan(domain, port, path, params):
     # Create the root element for the test plan
     test_plan = ET.Element("jmeterTestPlan", {
