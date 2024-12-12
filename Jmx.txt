@@ -1,1 +1,17 @@
 
+---
+startDelaySeconds: 0
+ssl: false
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false
+includeObjectNames: ["java.lang:type=Threading", "io.trino.filesystem.alluxio:type=AlluxioCacheStats,name=iceberg"]
+autoExcludeObjectNameAttributes: true
+excludeObjectNameAttributes:
+  "java.lang:type=OperatingSystem":
+    - "ObjectName"
+  "java.lang:type=Runtime":
+    - "ClassPath"
+    - "SystemProperties"
+rules:
+  - pattern: 'java*'
+  - pattern: 'trino*'
