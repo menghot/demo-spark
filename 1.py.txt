@@ -1,3 +1,9 @@
+alter table iceberg.ods.test_cdc2 set
+PROPERTIES extra_properties = MAP(ARRAY['write.metadata.delete-after-commit.enabled'], ARRAY['true'])
+
+
+
+
 import xml.etree.ElementTree as ET
 
 ^((100(\\.0+)?|[0-9]{1,2}(\\.[0-9]+)?)%$)
