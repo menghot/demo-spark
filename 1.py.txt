@@ -1,7 +1,7 @@
 alter table iceberg.ods.test_cdc2 set
 PROPERTIES extra_properties = MAP(ARRAY['write.metadata.delete-after-commit.enabled'], ARRAY['true'])
 
-
+https://dppt.guangdong.chinatax.gov.cn:8443/qrcode?cs=2_24442000000649727138_2024122719323500W836257&jrxt=EWMJF
 
 
 import xml.etree.ElementTree as ET
