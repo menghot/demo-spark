@@ -21,14 +21,16 @@ public class SparkIcebergHadoopCatalog {
                 .builder()
                 .appName(SparkIcebergHadoopCatalog.class.getName())
                 //.master("local")
-                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkSessionCatalog")
+
+                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
                 .config("spark.sql.catalog.spark_catalog.type", "hadoop")
                 .config("spark.sql.catalog.spark_catalog.warehouse", "warehouse")
 
                 // config
                 //.config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,org.example.SparkSQLExtensions")
                 //.config("spark.extraListeners", "io.openlineage.spark.agent.OpenLineageSparkListener")
-                .enableHiveSupport()
+                //.enableHiveSupport()
+
                 .getOrCreate();
 
         spark.sparkContext().setLogLevel("WARN");
@@ -60,10 +62,10 @@ public class SparkIcebergHadoopCatalog {
 //        spark.sql("MERGE INTO ods.my_iceberg_table  t using ods.my_iceberg_table2 s on t.id = s.id when matched then update set t.data = sleepUDF(1000)" +
 //                " when not matched then insert (id, data) values (s.id, s.data)");
 
-        spark.sql("insert into ods.my_iceberg_table2 select * from ods.my_iceberg_table");
+        spark.sql("insert into   ods.my_iceberg_table2 select * from ods.my_iceberg_table");
         spark.sql("select * from ods.my_iceberg_table2").show();
-        spark.sql("CREATE or replace VIEW ods.v_my_materialized_view as select * from ods.my_iceberg_table2").show();
-        spark.sql("select * from ods.v_my_materialized_view").show();
+        //spark.sql("CREATE or replace VIEW ods.v_my_materialized_view as select * from ods.my_iceberg_table2").show();
+        //spark.sql("select * from ods.v_my_materialized_view").show();
 
         spark.stop();
     }

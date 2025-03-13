@@ -7,9 +7,7 @@ import org.apache.spark.sql.SparkSession;
 
 public class SparkIcebergHiveCatalog {
     public static void main(String[] args) {
-
         //System.out.println(org.apache.hadoop.fs.s3a.S3AFileSystem.class);
-
         SparkConf conf = new SparkConf();
         if (System.getenv("SPARK_AUTH_SECRET") != null) {
             System.out.println("----SPARK_AUTH_SECRET-----" + System.getenv("SPARK_AUTH_SECRET"));
@@ -43,7 +41,7 @@ public class SparkIcebergHiveCatalog {
                 .config("spark.sql.catalog.spark_catalog.warehouse", "s3a://hive/warehouse")
                 .config("spark.sql.defaultCatalog", "spark_catalog")
 
-                .enableHiveSupport()
+                //.enableHiveSupport()
                 .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
                 .getOrCreate();
 

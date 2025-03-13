@@ -6,6 +6,8 @@ submit-local:
 	/Users/simon/tools/spark-3.5.2-bin-hadoop3/bin/spark-submit \
 		--conf spark.scheduler.pool=production \
 		--master local \
+		--executor-cores 2 \
+		--total-executor-cores 2 \
 		--class org.example.SparkIcebergHadoopCatalog \
 		--deploy-mode client \
 		/Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar
@@ -17,8 +19,6 @@ submit-cluster:
 		--master spark://192.168.80.241:7077 \
 		--class org.example.SparkIcebergHadoopCatalog \
 		/Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar
-
-
 
 submit-standalone:
 	/Users/simon/tools/spark-3.5.2-bin-hadoop3/bin/spark-submit \
