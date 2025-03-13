@@ -11,11 +11,24 @@ submit-local:
 		--class org.example.SparkIcebergHadoopCatalog \
 		--deploy-mode client \
 		/Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar
-
+#		--total-executor-cores 4 \
+# https://spark.apache.org/docs/latest/configuration.html#dynamic-allocation
+# schedulerBacklogTimeout: If pending tasks exist for 5 seconds, Spark adds more executors.
+# sustainedSchedulerBacklogTimeout: If the backlog persists for 10 seconds, Spark keeps scaling up.
+# --conf spark.dynamicAllocation.executorIdleTimeout=20s If an executor is idle for 20 seconds, it gets removed.
 submit-cluster:
 	/Users/simon/tools/spark-3.5.2-bin-hadoop3/bin/spark-submit \
 		--conf spark.scheduler.pool=production \
 		--deploy-mode cluster \
+		--driver-cores 1 \
+		--executor-cores 1 \
+		--conf spark.dynamicAllocation.enabled=true \
+		--conf spark.dynamicAllocation.initialExecutors=1 \
+		--conf spark.dynamicAllocation.minExecutors=1 \
+		--conf spark.dynamicAllocation.maxExecutors=3 \
+		--conf spark.dynamicAllocation.schedulerBacklogTimeout=2s \
+        --conf spark.dynamicAllocation.sustainedSchedulerBacklogTimeout=20s \
+        --conf spark.dynamicAllocation.executorIdleTimeout=20s \
 		--master spark://192.168.80.241:7077 \
 		--class org.example.SparkIcebergHadoopCatalog \
 		/Users/simon/workspaces/demo-spark.git/target/demo-spark-1.0-SNAPSHOT.jar
