@@ -1,0 +1,13 @@
+8 years  of experience in designing core backend systems and Kubernetes-based cloud native. 
+7 years  of experience in big data platform 
+
+Before join HSBC,  I held key technical roles to build a new data platform ,  integrated multi-engine processing platforms (E.g. Spark, Flink, Trino)
+Familiar with data governance, such as unified metadata services, data quality, data security, data lineage, and lifecycle management
+
+ I have a strong background in performance tuning, cloud-native deployments
+ i'm passionate about solving complex data challenges and continuously improving system architecture to meet evolving business needs
+
+Currently, I am developing the trino xfile plugin,
+Enhancing the plugin to support reading parquet or avro files and implementing file auto-discovery.
+The file discovery feature allows users to query files in a table without creating the table first.  
+It supports csv , excel and parquet files
