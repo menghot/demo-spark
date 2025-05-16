@@ -1,0 +1,30 @@
+  -   Using develop tools to create or  manage batch job / pipeline 
+       XFlow  https://github.com/menghot/xflow/ ? The airflow plugin to support create airflow dag in GUI 
+       Anything is a SQL table,  ETL/ data processing using SQL (run by Trino or spark)
+       Data processing engine(spark/flink/trino) management 
+       
+  -  Unified metadata management (open metadata)
+       Enhance cracn-metadata-service to support more flexible metadata (for data mash useage)
+
+  -  Data governance support (using open metadata?)
+      Support data quality control 
+      Support data lineage support 
+      Support data lifecycle support 
+      Support data SLA management/monitoring
+
+ -    Data security ?   
+       Using Trino + OPA / Apache Ranger? 
+       (Denodo has not support data filtering push-down for data security)
+
+ -   Data mesh
+      Data domain driven (utilizing data governance, open-metadata ?)
+
+      Support data assets exporting using API interface, (export as API  or SQL interface and apply same data security control, Denodo  not supported)
+
+      Support Metadata or Data auto Discovery (Trino XFile)
+      (Denodo not support the csv, excel, parquet file auto registry/discovering,  denodo needs create all data assets manually)
+
+      Fix performance issue (Large dataset join large dataset case).  Dynamic filter push down ,   E.g  , Join STAR API 
+      Query engine enhancement (support  customizd data source authentication)
+
+     
