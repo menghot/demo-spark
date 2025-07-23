@@ -29,16 +29,20 @@ public class SparkIcebergHiveCatalog {
                 .config(conf)
                 .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
                 .config("spark.hadoop.fs.s3a.endpoint", "http://192.168.80.241:9000")
-                .config("spark.hadoop.fs.s3a.access.key", "w2Xaege1JZSCpop1Dqd9")
-                .config("spark.hadoop.fs.s3a.secret.key", "yWvk6CGD9FofHE78prTeDn3w3vrqgTtGStz2TnNq")
-                .config("spark.hadoop,fs.s3a.path.style.access", "true")
+                .config("spark.hadoop.fs.s3a.access.key", "nDu2sEEwRzEqshz4L0dH")
+                .config("spark.hadoop.fs.s3a.secret.key", "d70ZQaHihIpnMAloRXIrTTl8gtj57jS88ewXhjAP")
+                .config("spark.hadoop.fs.s3a.path.style.access", "true")
 
                 .config("spark.sql.catalog.spark_catalog.type", "hive")
-                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkSessionCatalog")
-                .config("spark.sql.catalog.spark_catalog.type", "hive")
-                .config("spark.sql.catalog.spark_catalog.uri", "thrift://192.168.80.241:9083")
-                .config("hive.metastore.uris", "thrift://192.168.80.241:9083")
-                .config("spark.sql.catalog.spark_catalog.warehouse", "s3a://hive/warehouse")
+                .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
+                .config("spark.sql.catalog.spark_catalog.uri", "thrift://trino1.sc.co:9085")
+
+//                .config("spark.hive.metastore.use.SSL", "true")
+//                .config("spark.hive.metastore.truststore.path", "/Users/simon/ssl/hms/truststore.jks")
+//                .config("spark.hive.metastoÍre.truststore.password", "changeit")
+
+
+                .config("spark.sql.catalog.spark_catalog.warehouse", "s3a://hive/warehouse_9085")
                 .config("spark.sql.defaultCatalog", "spark_catalog")
 
                 //.enableHiveSupport()
@@ -68,9 +72,9 @@ public class SparkIcebergHiveCatalog {
         Dataset<Row> df = spark.sql("SELECT * FROM " + tableName);
         df.show();
 
-        spark.sql("create or replace view ods.v_sample_table as select * from ods.sample_table");
-
-        spark.sql("select * from ods.v_sample_table").show();
+        //spark not support creating iceberg view
+        //spark.sql("create view ods.v_sample_table as select * from ods.sample_table");
+        //spark.sql("select * from ods.v_sample_table").show();
 
         spark.close();
     }
